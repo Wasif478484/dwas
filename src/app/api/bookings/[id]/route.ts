@@ -1,7 +1,19 @@
 // Spec §8.1: GET /api/bookings/:id — participants only, phone only after accept.
 import { NextResponse } from "next/server";
 import { db } from "@/lib/firebase/admin";
+import type { BookingDoc } from "@/lib/types";
 import { assertParticipant, getActor, handleError, readBooking } from "../route";
+
+// One missing or unreadable contact doc must not fail the booking GET.
+async function readContactPhone(uid: string): Promise<string | null> {
+  try {
+    const snap = await db.collection("users").doc(uid).collection("private").doc("contact").get();
+    const stored = snap.get("phone");
+    return typeof stored === "string" ? stored : null;
+  } catch {
+    return null;
+  }
+}
 
 export async function GET(request: Request, context: { params: Promise<{ id: string }> }) {
   try {
@@ -10,21 +22,30 @@ export async function GET(request: Request, context: { params: Promise<{ id: str
     const { booking } = await readBooking(id);
     assertParticipant(booking, actor.uid, actor.role);
 
-    // Phone comes from the client's user doc and is never sent before accept.
-    let phone: string | null = null;
-    if (booking.phoneRevealed) {
-      // Spec §6/C12: phone lives only in users/{uid}/private/contact.
-      const snap = await db.collection("users").doc(booking.clientId).collection("private").doc("contact").get();
-      const stored = snap.get("phone");
-      if (typeof stored === "string") phone = stored;
+    const revealed = booking.phoneRevealed === true;
+    // Firestore keeps the full booking; only this client-readable response is redacted.
+    const location = { ...booking.location };
+    if (!revealed) delete location.note;
+    const safeBooking: BookingDoc = revealed ? booking : { ...booking, location };
+
+    let contact: { clientPhone?: string; technicianPhone?: string } | null = null;
+    let legacyPhone: string | null = null;
+    if (revealed) {
+      const [clientPhone, technicianPhone] = await Promise.all([
+        readContactPhone(booking.clientId),
+        readContactPhone(booking.technicianId),
+      ]);
+      contact = {
+        ...(clientPhone ? { clientPhone } : {}),
+        ...(technicianPhone ? { technicianPhone } : {}),
+      };
+      legacyPhone = clientPhone;
     }
-    // Flat booking fields are kept for the technician job page; `booking` and
-    // `contact` are the client page's shape. Phone is absent until accept.
     return NextResponse.json({
-      ...booking,
-      booking,
-      contact: phone ? { phone } : null,
-      ...(phone ? { clientPhone: phone } : {}),
+      ...safeBooking,
+      booking: safeBooking,
+      contact,
+      ...(legacyPhone ? { clientPhone: legacyPhone } : {}),
     });
   } catch (error) {
     return handleError(error);

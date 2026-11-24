@@ -67,7 +67,7 @@ function JobDetailView({ params }: DetailProps) {
   const outsideBand = Boolean(
     booking?.priceBand && price && (finalPrice < booking.priceBand.min || finalPrice > booking.priceBand.max),
   );
-  const revealed = booking && booking.status !== "requested";
+  const revealed = booking?.phoneRevealed === true;
   const clientPhone = (booking as (BookingDoc & { clientPhone?: string }) | null)?.clientPhone;
 
   async function advance() {

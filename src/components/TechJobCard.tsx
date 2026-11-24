@@ -159,6 +159,13 @@ export default function TechJobCard({
         </div>
       </dl>
 
+      {booking.phoneRevealed && booking.location?.note ? (
+        <p className="rounded-md bg-surface p-3 text-sm text-ink">
+          <span className="text-ink-muted">{t(lang, "tech.job.address")}: </span>
+          {booking.location.note}
+        </p>
+      ) : null}
+
       {error ? <p role="alert" className="text-sm font-medium text-red-700">{error}</p> : null}
 
       <div className="flex flex-col gap-3">

@@ -246,5 +246,6 @@
   "price.confirmFailed": "Could not confirm the price. Please try again.",
   "price.disputeFailed": "Could not submit your dispute. Please try again.",
   "price.disputeStatusFailed": "Your dispute was recorded, but the booking status could not be updated.",
-  "price.disputeOpened": "Dispute opened. We'll review the price."
+  "price.disputeOpened": "Dispute opened. We'll review the price.",
+  "booking.privacyNotice": "Your exact address and phone number are shared only after the technician accepts."
 }

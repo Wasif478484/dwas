@@ -5,6 +5,7 @@ import { Suspense, useCallback, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import StatusTracker, { tr } from "@/components/StatusTracker";
 import PriceConfirmation from "@/components/PriceConfirmation";
+import { AREAS } from "@/lib/areas";
 import { useLang } from "@/lib/i18n/use-lang";
 import type { BookingDoc } from "@/lib/types";
 
@@ -44,9 +45,11 @@ function BookingContent() {
       setError(tr(lang, "booking.error"));
       return;
     }
-    const data: { booking: BookingDoc; contact: { phone: string } | null } = await res.json();
+    const data: { booking: BookingDoc; contact: { clientPhone?: string; technicianPhone?: string } | null } = await res.json();
     setBooking(data.booking);
-    setPhone(data.contact?.phone ?? null);
+    // The client calls the technician; the technician's number lives in their
+    // own private contact doc (spec §6/C12).
+    setPhone(data.contact?.technicianPhone ?? null);
     setError(null);
   }, [id, lang]);
 
@@ -119,6 +122,17 @@ function BookingContent() {
             </p>
             {booking.finalPrice !== undefined && (
               <p className="text-ink-muted">{tr(lang, "booking.finalPrice")}: {booking.finalPrice}</p>
+            )}
+          </section>
+
+          <section className="flex flex-col gap-1 rounded-md border border-hairline p-4 text-sm text-ink">
+            <p className="text-ink-muted">
+              {tr(lang, "client.areaLabel")}: {AREAS.find((a) => a.id === booking.location?.areaId)?.name ?? "—"}
+            </p>
+            {booking.phoneRevealed ? (
+              booking.location?.note ? <p>{booking.location.note}</p> : null
+            ) : (
+              <p className="text-ink-muted">{tr(lang, "booking.privacyNotice")}</p>
             )}
           </section>
 
