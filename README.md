@@ -2,6 +2,8 @@
 
 Voice-first technician booking app for the Capital Youth Expo Hackathon (Competition 04-HK). A client (Ayesha) describes a household problem by voice or tap, the app matches a technician (Rafiq) by score, the booking is tracked, reviewed and shared — with Urdu (RTL) and English.
 
+**Live deployment:** https://dwas-beryl.vercel.app (scoped at `wasif-uchiha`, GitHub repo `https://github.com/Wasif478484/dwas` — pushes to main deploy automatically via `vercel git connect`).
+
 ## Architecture (spec §5)
 
 - **Client** (web, phone): Next.js App Router, PWA. Client/technician/admin routes (§9.1).
