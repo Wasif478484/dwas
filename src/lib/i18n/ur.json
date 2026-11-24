@@ -288,5 +288,6 @@
   "admin.stats.demandTitle": "[TODO-REVIEW] Demand by area",
   "admin.metric.acceptance": "[TODO-REVIEW] Acceptance rate",
   "admin.metric.avgRating": "[TODO-REVIEW] Average rating",
-  "admin.metric.fallback": "[TODO-REVIEW] Fallback usage"
+  "admin.metric.fallback": "[TODO-REVIEW] Fallback usage",
+  "error.boundary": "[TODO-REVIEW] Something went wrong. Please try again."
 }

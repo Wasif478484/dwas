@@ -288,5 +288,6 @@
   "admin.stats.demandTitle": "Demand by area",
   "admin.metric.acceptance": "Acceptance rate",
   "admin.metric.avgRating": "Average rating",
-  "admin.metric.fallback": "Fallback usage"
+  "admin.metric.fallback": "Fallback usage",
+  "error.boundary": "Something went wrong. Please try again."
 }

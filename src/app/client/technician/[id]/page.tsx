@@ -54,7 +54,7 @@ export default async function TechnicianPage({ params }: { params: Promise<{ id:
       <div className="flex gap-4 rounded-md border border-hairline bg-background p-4">
         {tech?.photoUrl && (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={tech.photoUrl} alt="" className="h-20 w-20 shrink-0 rounded-md bg-surface object-cover" />
+          <img src={tech.photoUrl} alt="" loading="lazy" className="h-20 w-20 shrink-0 rounded-md bg-surface object-cover" />
         )}
         <div className="min-w-0">
           <h1 className="text-display font-display text-ink">{tech?.name}</h1>
