@@ -12,10 +12,12 @@ export default function ConfirmScreen({
   result,
   onConfirm,
   onPickTrade,
+  onUrgencyChange,
 }: {
   result: IntakeResult;
   onConfirm: () => void;
   onPickTrade: () => void;
+  onUrgencyChange: (urgency: Urgency) => void;
 }) {
   const lang: Lang = useLang();
   const [urgency, setUrgency] = useState<Urgency>(result.urgency);
@@ -34,7 +36,10 @@ export default function ConfirmScreen({
             key={u}
             type="button"
             aria-pressed={urgency === u}
-            onClick={() => setUrgency(u)}
+            onClick={() => {
+              setUrgency(u);
+              onUrgencyChange(u);
+            }}
             className={`rounded-pill border px-3 py-1.5 text-xs ${
               urgency === u ? "border-primary bg-primary text-white" : "border-hairline text-ink-muted"
             }`}

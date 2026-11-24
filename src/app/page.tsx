@@ -1,4 +1,5 @@
 import Link from "next/link";
+import DemoLogin from "@/components/DemoLogin";
 import LanguageToggle from "@/components/LanguageToggle";
 import { t } from "@/lib/i18n";
 
@@ -6,6 +7,7 @@ export default function Landing() {
   return (
     <div className="flex min-h-full flex-1 flex-col items-center justify-center gap-8">
       <LanguageToggle />
+      <DemoLogin />
       <div className="flex flex-col gap-4 text-center">
         <Link
           href="/client"

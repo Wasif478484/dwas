@@ -31,6 +31,11 @@ Recorded where the spec was silent or open, per the project rule "spec wins; whe
 - Accessibility checks run with `antislop-human`: `contrast-check.py` passes on primary/ink/surface.
 - Mobile: everything is flow-based (`flex-col`, `gap`), 362px first; no overflow-hidden on content, `min-h-screen` removed? — pages use `min-h-screen flex flex-col`.
 
+## Platform gotchas (found in the deployed app)
+
+- Next.js 16.4.6 ignores `+page.tsx`; route pages must be named `page.tsx`. The old `app/(client)/+page.tsx` never created `/client` (and a `(client)` route group maps to `/`, colliding with the landing) — the landing's links 404'd. Routes now use `page.tsx` and the client home lives at `src/app/client/page.tsx` (spec §9.1).
+- GitHub rejected pushes with a private commit email (GH007); local git identity is now `Wasif478484@users.noreply.github.com` and the history was rewritten with `--reset-author` so pushes work.
+
 ## Notes and open items
 
 - Verified against the Firestore emulator: started with `npx firebase-tools@14 emulators:start --only firestore --project dwas` (requires Java 8+; installed Corretto 17 via winget here). `npm run seed` with `FIRESTORE_EMULATOR_HOST=127.0.0.1:8080` produced: users 5 (4 demo clients + 1 admin; Rafiq shares a user doc with Tech[0]), technicians 24, bookings 60, reviews 21 (completed bookings only, per A07/12.1), areas 7, rateTable 21.

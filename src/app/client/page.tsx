@@ -3,7 +3,8 @@
 // urgency chip C04) → location (C05).
 "use client";
 
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import CommonProblemCards, { TRADES } from "@/components/CommonProblemCards";
 import ConfirmScreen from "@/components/ConfirmScreen";
 import LocationScreen, { type LocationData } from "@/components/LocationScreen";
@@ -13,14 +14,22 @@ import { t } from "@/lib/i18n";
 import { useLang } from "@/lib/i18n/use-lang";
 import type { IntakeResult } from "@/lib/types";
 
-type Step = "describe" | "confirm" | "picker" | "location" | "done";
+type Step = "describe" | "confirm" | "picker" | "location" | "emergency" | "done";
+const INTAKE_KEY = "dwas-intake";
+const LOCATION_KEY = "dwas-location";
 
 export default function ClientHome() {
+  const router = useRouter();
   const lang = useLang();
   const [step, setStep] = useState<Step>("describe");
   const [text, setText] = useState("");
   const [intake, setIntake] = useState<IntakeResult | null>(null);
   const [location, setLocation] = useState<LocationData | null>(null);
+
+  useEffect(() => {
+    const saved = window.sessionStorage.getItem(INTAKE_KEY);
+    if (saved) setIntake(JSON.parse(saved) as IntakeResult);
+  }, []);
 
   async function onSubmit() {
     const res = await fetch("/api/intake", {
@@ -30,7 +39,10 @@ export default function ClientHome() {
     });
     const result: IntakeResult = await res.json();
     setIntake(result);
-    setStep("confirm");
+    window.sessionStorage.setItem(INTAKE_KEY, JSON.stringify(result));
+    // C14: the rules emergency detector runs in the API route regardless of
+    // the LLM, so a dangerous description always shows the notice first.
+    setStep(result.emergency.is_emergency ? "emergency" : "confirm");
   }
 
   function addTrade(trade: (typeof TRADES)[number]) {
@@ -79,8 +91,36 @@ export default function ClientHome() {
         </form>
       )}
 
+      {step === "emergency" && (
+        <section className="flex w-full max-w-lg flex-col gap-4 rounded-lg border-2 border-red-600 bg-background p-6" role="alert">
+          <h2 className="text-title font-display text-red-700">{t(lang, "emergency.title")}</h2>
+          <p className="text-ink">{t(lang, "emergency.notice")}</p>
+          <p className="text-ink-muted text-sm">{t(lang, "emergency.safety")}</p>
+          <div className="flex flex-wrap gap-2">
+            <a href="tel:1122" className="rounded-lg bg-red-700 px-6 py-3 text-base font-medium text-white">
+              {t(lang, "emergency.call")}
+            </a>
+            <button
+              type="button"
+              onClick={() => setStep("confirm")}
+              className="rounded-lg border border-hairline px-6 py-3 text-base font-medium text-ink"
+            >
+              {t(lang, "emergency.continue")}
+            </button>
+          </div>
+        </section>
+      )}
+
       {step === "confirm" && intake && (
-        <ConfirmScreen result={intake} onConfirm={() => setStep("location")} onPickTrade={showPicker} />
+        <ConfirmScreen
+          result={intake}
+          onConfirm={() => setStep("location")}
+          onPickTrade={showPicker}
+          onUrgencyChange={(urgency) => {
+            setIntake((prev) => (prev ? { ...prev, urgency } : prev));
+            window.sessionStorage.setItem(INTAKE_KEY, JSON.stringify({ ...intake, urgency }));
+          }}
+        />
       )}
 
       {step === "picker" && (
@@ -93,14 +133,13 @@ export default function ClientHome() {
       )}
 
       {step === "location" && (
-        <LocationScreen onConfirm={(loc) => setLocation(loc)} />
-      )}
-
-      {step === "done" && (
-        <section className="flex w-full max-w-lg flex-col gap-2 rounded-lg border border-hairline bg-background p-4">
-          <p className="text-ink">{intake?.summary_ur || intake?.summary_en || ""}</p>
-          <p className="text-ink-subtle text-sm">{location ? t(lang, "client.locationDone") : ""}</p>
-        </section>
+        <LocationScreen
+          onConfirm={(loc) => {
+            setLocation(loc);
+            window.sessionStorage.setItem(LOCATION_KEY, JSON.stringify(loc));
+            void router.push("/client/results");
+          }}
+        />
       )}
     </div>
   );
