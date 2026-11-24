@@ -9,3 +9,4 @@ export const NEWCOMER_JOBS = 5;
 export const INTAKE_TIMEOUT_MS = 4000;
 export const INTAKE_MAX_CHARS = 500;
 export const EMERGENCY_NUMBERS = "Rescue 1122 and gas utility emergency line; the team must confirm numbers before launch";
+export const CANCEL_REASONS = ["busy", "too_far", "not_needed", "reschedule"] as const;

@@ -253,5 +253,16 @@
   "history.error": "Could not load your bookings. Please try again.",
   "history.empty": "No bookings yet.",
   "history.back": "Describe your problem",
-  "history.rebook": "Book again"
+  "history.rebook": "Book again",
+  "booking.manageTitle": "Manage booking",
+  "booking.reschedule": "Reschedule",
+  "booking.reportNoShow": "Report no-show",
+  "booking.cancelReasonTitle": "Why are you cancelling?",
+  "booking.cancelKeep": "Keep booking",
+  "booking.cancelDone": "Booking cancelled.",
+  "booking.noShowDone": "No-show reported. Thank you.",
+  "booking.cancelReason.busy": "I'm busy",
+  "booking.cancelReason.too_far": "Too far away",
+  "booking.cancelReason.not_needed": "No longer needed",
+  "booking.cancelReason.reschedule": "I want to reschedule"
 }

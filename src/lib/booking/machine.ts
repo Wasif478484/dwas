@@ -42,6 +42,13 @@ function requireActor(actor: Actor, expected: Actor, to: BookingStatus): void {
   }
 }
 
+// C16: a no-show can only be reported 30 minutes after the scheduled time.
+export function noShowEligible(booking: BookingDoc, now = Date.now()): boolean {
+  if (typeof booking.scheduledFor !== "number") return false;
+  if (booking.status !== "accepted" && booking.status !== "on_the_way") return false;
+  return now >= booking.scheduledFor + 30 * 60_000;
+}
+
 // The only function that changes booking.status.
 export function transition(
   booking: BookingDoc,

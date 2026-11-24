@@ -2,10 +2,14 @@
 "use client";
 
 import { Suspense, useCallback, useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import StatusTracker, { tr } from "@/components/StatusTracker";
 import PriceConfirmation from "@/components/PriceConfirmation";
+import { clientAuthHeaders } from "@/lib/auth/client";
+import { noShowEligible } from "@/lib/booking/machine";
+import { rebookPrefill } from "@/lib/booking/rebook";
 import { AREAS } from "@/lib/areas";
+import { CANCEL_REASONS } from "@/lib/config";
 import { useLang } from "@/lib/i18n/use-lang";
 import type { BookingDoc } from "@/lib/types";
 
@@ -29,10 +33,13 @@ export default function BookingPage() {
 
 function BookingContent() {
   const lang = useLang();
+  const router = useRouter();
   const { id } = useParams<{ id: string }>();
   const [booking, setBooking] = useState<BookingDoc | null>(null);
   const [phone, setPhone] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
+  const [showReasons, setShowReasons] = useState(false);
   const [stars, setStars] = useState<1 | 2 | 3 | 4 | 5>(5);
   const [tags, setTags] = useState<string[]>([]);
   const [comment, setComment] = useState("");
@@ -87,24 +94,49 @@ function BookingContent() {
     }
   }
 
-  async function cancel() {
+  async function patchStatus(to: "cancelled_client" | "no_show", reason?: string): Promise<boolean> {
     setBusy(true);
+    setError(null);
+    setNotice(null);
     try {
       const res = await fetch(`/api/bookings/${id}/status`, {
         method: "PATCH",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ to: "cancelled_client", reason: "client_request" }),
+        headers: { "content-type": "application/json", ...(await clientAuthHeaders()) },
+        body: JSON.stringify({ to, ...(reason ? { reason } : {}) }),
       });
-      const data = await res.json();
       if (!res.ok) {
-        setError(errorText(data, tr(lang, "booking.error")));
-        return;
+        setError(errorText(await res.json().catch(() => null), tr(lang, "booking.error")));
+        return false;
       }
-      setBooking(data.booking);
-      setError(null);
+      await load();
+      return true;
     } finally {
       setBusy(false);
     }
+  }
+
+  async function cancel(reason: string) {
+    if (await patchStatus("cancelled_client", reason)) {
+      setShowReasons(false);
+      setNotice(tr(lang, "booking.cancelDone"));
+    }
+  }
+
+  async function reschedule() {
+    const prefill = booking ? rebookPrefill(booking) : null;
+    if (!booking || !prefill) return;
+    if (await patchStatus("cancelled_client", "reschedule")) {
+      const saved = window.sessionStorage;
+      saved.setItem("dwas-intake", JSON.stringify(prefill.intake));
+      saved.setItem("dwas-selected-tech", prefill.selectedTech);
+      saved.setItem("dwas-rebook", "1");
+      saved.setItem("dwas-location", JSON.stringify(booking.location));
+      router.push("/client/booking/new");
+    }
+  }
+
+  async function reportNoShow() {
+    if (await patchStatus("no_show")) setNotice(tr(lang, "booking.noShowDone"));
   }
 
   return (
@@ -210,14 +242,67 @@ function BookingContent() {
           )}
 
           {(booking.status === "requested" || booking.status === "accepted" || booking.status === "on_the_way") && (
-            <button
-              type="button"
-              onClick={() => void cancel()}
-              disabled={busy}
-              className="self-start rounded-md border border-hairline px-5 py-2 text-sm text-ink-muted disabled:opacity-60"
-            >
-              {tr(lang, "booking.cancel")}
-            </button>
+            <section className="flex flex-col gap-3 rounded-md border border-hairline p-4">
+              <h2 className="text-sm font-medium text-ink">{tr(lang, "booking.manageTitle")}</h2>
+              {showReasons ? (
+                <div className="flex flex-col gap-2" role="group" aria-label={tr(lang, "booking.cancelReasonTitle")}>
+                  <p className="text-sm text-ink-muted">{tr(lang, "booking.cancelReasonTitle")}</p>
+                  <div className="flex flex-wrap gap-2">
+                    {CANCEL_REASONS.map((reason) => (
+                      <button
+                        key={reason}
+                        type="button"
+                        onClick={() => void cancel(reason)}
+                        disabled={busy}
+                        className="rounded-pill border border-hairline px-3 py-1.5 text-xs text-ink disabled:opacity-60"
+                      >
+                        {tr(lang, `booking.cancelReason.${reason}`)}
+                      </button>
+                    ))}
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setShowReasons(false)}
+                    disabled={busy}
+                    className="self-start text-sm text-ink-muted disabled:opacity-60"
+                  >
+                    {tr(lang, "booking.cancelKeep")}
+                  </button>
+                </div>
+              ) : (
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setShowReasons(true)}
+                    disabled={busy}
+                    className="rounded-md border border-hairline px-5 py-2 text-sm text-ink-muted disabled:opacity-60"
+                  >
+                    {tr(lang, "booking.cancel")}
+                  </button>
+                  {rebookPrefill(booking) && (
+                    <button
+                      type="button"
+                      onClick={() => void reschedule()}
+                      disabled={busy}
+                      className="rounded-md border border-hairline px-5 py-2 text-sm text-ink-muted disabled:opacity-60"
+                    >
+                      {tr(lang, "booking.reschedule")}
+                    </button>
+                  )}
+                </div>
+              )}
+              {noShowEligible(booking) && (
+                <button
+                  type="button"
+                  onClick={() => void reportNoShow()}
+                  disabled={busy}
+                  className="self-start rounded-md border border-hairline px-5 py-2 text-sm text-ink-muted disabled:opacity-60"
+                >
+                  {tr(lang, "booking.reportNoShow")}
+                </button>
+              )}
+              {notice && <p role="status" className="text-sm text-ink-muted">{notice}</p>}
+            </section>
           )}
         </>
       )}

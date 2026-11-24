@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { ALLOWED_TRANSITIONS, transition, TransitionError, type Actor, type TransitionPayload } from "@/lib/booking/machine";
+import { ALLOWED_TRANSITIONS, noShowEligible, transition, TransitionError, type Actor, type TransitionPayload } from "@/lib/booking/machine";
 import type { BookingDoc, BookingStatus } from "@/lib/types";
 
 const NOW = 1_700_000_000_000;
@@ -76,5 +76,29 @@ describe("booking state machine", () => {
     }
     expect(transition(before, "completed", "technician", { now: NOW, finalPrice: 2000 }).statusHistory.at(-1)?.reason)
       .toBe("over_band_confirmation_required");
+  });
+});
+
+describe("noShowEligible", () => {
+  it("is false 29 minutes after the scheduled time", () => {
+    expect(noShowEligible(booking("accepted"), SCHEDULED + 29 * 60_000)).toBe(false);
+  });
+
+  it("is true from 30 minutes after the scheduled time in actionable states", () => {
+    const at = SCHEDULED + 30 * 60_000;
+    expect(noShowEligible(booking("accepted"), at)).toBe(true);
+    expect(noShowEligible(booking("on_the_way"), at)).toBe(true);
+  });
+
+  it("is false in other statuses", () => {
+    const at = SCHEDULED + 31 * 60_000;
+    expect(noShowEligible(booking("requested"), at)).toBe(false);
+    expect(noShowEligible(booking("in_progress"), at)).toBe(false);
+  });
+
+  it("is false without a scheduledFor time", () => {
+    const before = booking("accepted");
+    delete before.scheduledFor;
+    expect(noShowEligible(before, SCHEDULED + 31 * 60_000)).toBe(false);
   });
 });

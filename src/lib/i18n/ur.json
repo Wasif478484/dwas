@@ -253,5 +253,16 @@
   "history.error": "[TODO-REVIEW] Could not load your bookings. Please try again.",
   "history.empty": "[TODO-REVIEW] No bookings yet.",
   "history.back": "[TODO-REVIEW] Describe your problem",
-  "history.rebook": "[TODO-REVIEW] Book again"
+  "history.rebook": "[TODO-REVIEW] Book again",
+  "booking.manageTitle": "[TODO-REVIEW] Manage booking",
+  "booking.reschedule": "[TODO-REVIEW] Reschedule",
+  "booking.reportNoShow": "[TODO-REVIEW] Report no-show",
+  "booking.cancelReasonTitle": "[TODO-REVIEW] Why are you cancelling?",
+  "booking.cancelKeep": "[TODO-REVIEW] Keep booking",
+  "booking.cancelDone": "[TODO-REVIEW] Booking cancelled.",
+  "booking.noShowDone": "[TODO-REVIEW] No-show reported. Thank you.",
+  "booking.cancelReason.busy": "[TODO-REVIEW] I'm busy",
+  "booking.cancelReason.too_far": "[TODO-REVIEW] Too far away",
+  "booking.cancelReason.not_needed": "[TODO-REVIEW] No longer needed",
+  "booking.cancelReason.reschedule": "[TODO-REVIEW] I want to reschedule"
 }
