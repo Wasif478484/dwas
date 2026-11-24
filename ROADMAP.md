@@ -14,7 +14,7 @@ Plans came from three parallel agents (client, admin/platform, technician). Feat
 | 6 | C15 history + rebook | Client | P1 | 1, 5 | done |
 | 7 | C16 cancel/reschedule/no-show | Client | P1 | 3, 6 | done |
 | 8 | A04 full dashboard | Admin | P1 | 2 | done |
-| 9 | A06 complaints queue with resolve | Admin | P1 | — | todo |
+| 9 | A06 complaints queue with resolve | Admin | P1 | — | done |
 | 10 | D13 health, skeletons, error boundary | Platform | P2 | — | todo |
 | 11 | T09 technician stats | Technician | P1 | — | todo |
 | 12 | T07 trade + map + radius fallback | Technician | P1 | — | todo |
