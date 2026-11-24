@@ -48,7 +48,9 @@ export async function PATCH(request: Request, context: { params: Promise<{ id: s
     await batch.commit();
 
     if (requeued) await logEvent("quick_book", actor.actor, { bookingId: id });
-    if (to === "accepted" || to === "completed") await logEvent(to, actor.actor, { bookingId: id });
+    if (to === "accepted" || to === "completed") {
+      await logEvent(to, actor.actor, { bookingId: id, technicianId: booking.technicianId });
+    }
     return NextResponse.json({ booking: updated });
   } catch (error) {
     return handleError(error);

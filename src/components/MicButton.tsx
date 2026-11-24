@@ -29,7 +29,15 @@ function createRecognizer(): Recognizer | null {
 
 const CAP_SECONDS = 30; // spec C01
 
-export default function MicButton({ lang, onTranscript }: { lang: Lang; onTranscript: (text: string) => void }) {
+export default function MicButton({
+  lang,
+  onTranscript,
+  onVoiceResult,
+}: {
+  lang: Lang;
+  onTranscript: (text: string) => void;
+  onVoiceResult?: (ok: boolean) => void;
+}) {
   const [supported, setSupported] = useState(true);
   const [busy, setBusy] = useState(false);
   const recognizerRef = useRef<Recognizer | null>(null);
@@ -57,9 +65,13 @@ export default function MicButton({ lang, onTranscript }: { lang: Lang; onTransc
     recognizer.onresult = (event) => {
       const transcript = event.results?.[event.results.length - 1]?.[0]?.transcript ?? "";
       onTranscript(transcript);
+      onVoiceResult?.(true);
     };
     recognizer.onend = () => setBusy(false);
-    recognizer.onerror = () => setBusy(false);
+    recognizer.onerror = () => {
+      onVoiceResult?.(false);
+      setBusy(false);
+    };
     recognizerRef.current = recognizer;
     capTimerRef.current = setTimeout(stop, CAP_SECONDS * 1000);
     setBusy(true);

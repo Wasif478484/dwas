@@ -4,6 +4,7 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { db } from "@/lib/firebase/admin";
+import { logEvent } from "@/lib/events/log";
 import { rankTechnicians, type MatchCard } from "@/lib/match/rank";
 import { rateBand, type RateTableRow } from "@/lib/rate-table";
 import type { TechnicianDoc } from "@/lib/types";
@@ -102,16 +103,9 @@ export async function POST(request: Request) {
       avgResponseSec: replyByTech.get(r.technicianId) ?? null,
     }));
 
-    try {
-      await db.collection("events").add({
-        type: "match_shown",
-        ts: Date.now(),
-        actorRole: "client",
-        meta: { trade, jobType, urgency, areaId: areaId ?? null, count: results.length },
-      });
-    } catch {
-      // Analytics must never break matching.
-    }
+    await logEvent("match_shown", "client", {
+      trade, jobType, urgency, areaId: areaId ?? null, count: results.length,
+    });
 
     return NextResponse.json(results);
   } catch (err) {

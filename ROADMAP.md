@@ -7,7 +7,7 @@ Plans came from three parallel agents (client, admin/platform, technician). Feat
 | # | Feature | Area | Pri | Depends on | Status |
 |---|---------|------|-----|-----------|--------|
 | 1 | Booking form gap (`/client/booking/new`, BookNowButton, client auth headers) | Client | P0 gap | — | done |
-| 2 | D08 event log completeness | Platform | P1 | — | todo |
+| 2 | D08 event log completeness | Platform | P1 | — | done |
 | 3 | D06 trust score + badges (§7.3) | Platform | P1 | — | todo |
 | 4 | C11 price bands + over-band confirm/dispute | Client | P1 | 1 | todo |
 | 5 | C12 phone/address privacy UI + rules | Client | P1 | 1 | todo |

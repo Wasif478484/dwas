@@ -73,7 +73,7 @@ export async function POST(request: Request, context: { params: Promise<{ id: st
     });
 
     if (!reviewed) throw new ApiError("invalid_state", 409, "Booking is not completed");
-    await logEvent("reviewed", "client", { bookingId: id });
+    await logEvent("reviewed", "client", { bookingId: id, technicianId: booking.technicianId });
     return NextResponse.json({ booking: reviewed, review });
   } catch (error) {
     return handleError(error);

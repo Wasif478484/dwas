@@ -6,6 +6,7 @@ import type { DocumentReference } from "firebase-admin/firestore";
 import { auth, db } from "@/lib/firebase/admin";
 import { REQUEST_EXPIRY_SEC } from "@/lib/config";
 import { TransitionError, type Actor } from "@/lib/booking/machine";
+import { logEvent } from "@/lib/events/log";
 import type { BookingDoc, Role } from "@/lib/types";
 
 // Shared route plumbing lives here so the booking sub-routes stay one-liners.
@@ -52,17 +53,8 @@ export async function getActor(request: Request): Promise<{ uid: string; role: R
   return { uid, role, actor: role };
 }
 
-export async function logEvent(
-  type: string,
-  actor: Actor,
-  extra: Record<string, unknown> = {},
-): Promise<void> {
-  try {
-    await db.collection("events").add({ type, actorRole: actor, ts: Date.now(), ...extra });
-  } catch {
-    // Events are best-effort: never fail the booking write.
-  }
-}
+// Sub-routes import logEvent from here; keep the shared logger server-only.
+export { logEvent };
 
 export async function readBooking(id: string): Promise<{ ref: DocumentReference; booking: BookingDoc }> {
   const ref = db.collection("bookings").doc(id);
@@ -161,7 +153,12 @@ export async function POST(request: Request) {
       ...(input.scheduledFor !== undefined ? { scheduledFor: input.scheduledFor } : {}),
     };
     await ref.set(booking);
-    await logEvent("booking_created", actor, { bookingId: ref.id });
+    await logEvent("booking_created", actor, {
+      bookingId: ref.id,
+      trade,
+      jobType,
+      areaId: input.location.areaId ?? null,
+    });
     return NextResponse.json({ booking }, { status: 201 });
   } catch (error) {
     return handleError(error);

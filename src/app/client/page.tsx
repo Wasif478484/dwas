@@ -23,6 +23,7 @@ export default function ClientHome() {
   const lang = useLang();
   const [step, setStep] = useState<Step>("describe");
   const [text, setText] = useState("");
+  const [voice, setVoice] = useState<"none" | "ok" | "failed">("none");
   const [intake, setIntake] = useState<IntakeResult | null>(null);
   const [location, setLocation] = useState<LocationData | null>(null);
 
@@ -35,7 +36,7 @@ export default function ClientHome() {
     const res = await fetch("/api/intake", {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ text }),
+      body: JSON.stringify({ text, voice }),
     });
     const result: IntakeResult = await res.json();
     setIntake(result);
@@ -48,6 +49,7 @@ export default function ClientHome() {
   function addTrade(trade: (typeof TRADES)[number]) {
     const label = t(lang, `trade.${trade}`);
     setText((prev) => (prev ? `${prev} ${label}` : label));
+    setVoice("none");
   }
 
   function showPicker() {
@@ -62,11 +64,14 @@ export default function ClientHome() {
         <form className="flex w-full max-w-lg flex-col gap-4">
           <textarea
             value={text}
-            onChange={(e) => setText(e.target.value)}
+            onChange={(e) => {
+              setText(e.target.value);
+              setVoice("none");
+            }}
             placeholder={t(lang, "client.describe")}
             className="min-h-28 w-full rounded-md border border-hairline bg-background px-4 py-3 text-base text-ink outline-none placeholder:text-ink-subtle focus:border-primary focus:ring-2 focus:ring-primary/20"
           />
-          <MicButton lang={lang} onTranscript={setText} />
+          <MicButton lang={lang} onTranscript={setText} onVoiceResult={(ok) => setVoice(ok ? "ok" : "failed")} />
           <div className="flex flex-wrap gap-2">
             {TRADES.map((trade) => (
               <button
@@ -87,7 +92,7 @@ export default function ClientHome() {
           >
             {t(lang, "client.submit")}
           </button>
-          <CommonProblemCards onSelect={(value) => setText(value)} />
+          <CommonProblemCards onSelect={(value) => { setText(value); setVoice("none"); }} />
         </form>
       )}
 

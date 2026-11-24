@@ -1,15 +1,15 @@
 // Spec §8.1: POST /api/intake — public, rate limited, zod-validated input,
-// spec §7.1 pipeline. Logs intake_started + voice_ok/fallback_used (D08).
-import { Timestamp } from "firebase-admin/firestore";
+// spec §7.1 pipeline. Logs intake_started, voice outcome and fallback (D08).
 import { z } from "zod";
 import { NextResponse } from "next/server";
-import { db } from "@/lib/firebase/admin";
+import { logEvent } from "@/lib/events/log";
 import { INTAKE_MAX_CHARS } from "@/lib/config";
 import { runIntake } from "@/lib/intake/pipeline";
 
 const inputSchema = z.object({
   text: z.string().min(1).max(INTAKE_MAX_CHARS),
   language_hint: z.string().optional(),
+  voice: z.enum(["ok", "failed", "none"]).optional(),
 });
 
 // Spec §10.2 D07: per-IP rate limit on /api/intake (example: 20/min).
@@ -40,9 +40,12 @@ export async function POST(request: Request) {
   if (!parsed.success) {
     return NextResponse.json({ error: { code: "invalid_input", message: "Invalid input" } }, { status: 400 });
   }
-  await db.collection("events").add({ type: "intake_started", ts: Timestamp.now(), actorRole: "client" });
+  await logEvent("intake_started", "client");
   const result = await runIntake(parsed.data.text);
-  const eventType = result.source === "llm" ? "voice_ok" : "fallback_used";
-  await db.collection("events").add({ type: eventType, ts: Timestamp.now(), actorRole: "client" });
+  // Voice outcome comes from the mic; the rules fallback comes from the pipeline.
+  // Keeping them separate avoids logging the same event twice.
+  if (parsed.data.voice === "ok") await logEvent("voice_ok", "client");
+  if (parsed.data.voice === "failed") await logEvent("voice_failed", "client");
+  if (result.source !== "llm") await logEvent("fallback_used", "client");
   return NextResponse.json(result);
 }
