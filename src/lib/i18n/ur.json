@@ -5,5 +5,21 @@
   "lang.ur": "[TODO-REVIEW] اردو",
   "demo.login": "[TODO-REVIEW] Demo login",
   "landing.client": "[TODO-REVIEW] Mujhe mistri chahiye",
-  "landing.tech": "[TODO-REVIEW] Main mistri hoon"
+  "landing.tech": "[TODO-REVIEW] Main mistri hoon",
+  "client.title": "[TODO-REVIEW] Aap ka masla kya hai?",
+  "client.describe": "[TODO-REVIEW] Masla likhein…",
+  "client.mic": "[TODO-REVIEW] Mic",
+  "trade.plumber": "[TODO-REVIEW] Mistri",
+  "trade.electrician": "[TODO-REVIEW] Electrician",
+  "trade.ac_fridge": "[TODO-REVIEW] AC aur fridge",
+  "trade.carpenter": "[TODO-REVIEW] Carpenter",
+  "trade.mazdoor": "[TODO-REVIEW] Mazdoor",
+  "problem.tap_leak": "[TODO-REVIEW] Tapak raha hai",
+  "problem.geyser": "[TODO-REVIEW] Geyser thailing",
+  "problem.ac_cool": "[TODO-REVIEW] AC thanda nahi",
+  "problem.switch_spark": "[TODO-REVIEW] Switch ma chingari",
+  "problem.fan": "[TODO-REVIEW] Pankha band hai",
+  "problem.door_lock": "[TODO-REVIEW] Darwaza toot gaya",
+  "problem.drain_block": "[TODO-REVIEW] Nali band hai",
+  "problem.shift_help": "[TODO-REVIEW] Baarhe karvaana"
 }

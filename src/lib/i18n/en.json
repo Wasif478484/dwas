@@ -5,5 +5,21 @@
   "lang.ur": "اردو",
   "demo.login": "Demo login",
   "landing.client": "Mujhe mistri chahiye",
-  "landing.tech": "Main mistri hoon"
+  "landing.tech": "Main mistri hoon",
+  "client.title": "What's the problem?",
+  "client.describe": "Describe the problem…",
+  "client.mic": "Mic",
+  "trade.plumber": "Plumber",
+  "trade.electrician": "Electrician",
+  "trade.ac_fridge": "AC & fridge",
+  "trade.carpenter": "Carpenter",
+  "trade.mazdoor": "Mazdoor",
+  "problem.tap_leak": "Tap is leaking",
+  "problem.geyser": "Geyser is dripping",
+  "problem.ac_cool": "AC not cooling",
+  "problem.switch_spark": "Switch sparking",
+  "problem.fan": "Fan is off",
+  "problem.door_lock": "Door lock is broken",
+  "problem.drain_block": "Drain is blocked",
+  "problem.shift_help": "Shift help needed"
 }
