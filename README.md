@@ -60,6 +60,12 @@ npm run dev     # http://localhost:3000
 npm run build   # production build check
 ```
 
+## Build status
+
+- **Implemented (P0):** C01–C05 (client describe/confirm/urgency/location), C06–C10 (results, public profile, booking, live tracker, review), T01–T05 (technician home, online switch, incoming jobs, status button, numpad), A01–A03 (admin auth, approval queue, bookings table), D01–D05 (intake, matching, rate lookup, state machine, mock OTP), plus C14 emergency notice.
+- **Not yet implemented (P1/P2):** C11–C23 (price bands UI, phone privacy UI, rebooking, photos, quick-book, PWA, etc.), T06–T12 (voice onboarding, push), A04–A09 (dashboard, complaints, CSV export), D06–D13 (trust badges, analytics, audio pack, accessibility extras). See the spec for IDs.
+- API routes need Firebase credentials in Vercel environment variables to read/write real data; the UI renders without them.
+
 ## Honest limitations (§14.2)
 
 - Rate table values are placeholders ("indicative range" only, not quotes).
