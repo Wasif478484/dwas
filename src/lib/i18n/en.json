@@ -221,5 +221,16 @@
   "tech.profile.notificationsOn": "Notifications on",
   "tech.profile.approvalPending": "Approval pending",
   "tech.profile.approvalRejected": "Approval rejected",
-  "tech.profile.approvalSuspended": "Suspended"
+  "tech.profile.approvalSuspended": "Suspended",
+  "booking.bookNow": "Book now",
+  "booking.rebookTitle": "Rebook this job",
+  "booking.confirm": "Confirm booking",
+  "booking.failed": "Could not confirm booking. Please try again.",
+  "booking.empty.title": "Start with your problem",
+  "booking.empty.body": "Describe what needs fixing, then choose a technician to book.",
+  "booking.empty.back": "Describe your problem",
+  "booking.slot.label": "When should we come?",
+  "booking.slot.today": "Today",
+  "booking.slot.tomorrow": "Tomorrow",
+  "booking.slot.flexible": "Flexible"
 }

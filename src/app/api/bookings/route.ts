@@ -77,21 +77,35 @@ export function assertParticipant(booking: BookingDoc, uid: string, role: Role):
   }
 }
 
+const tradeEnum = z.enum(["plumber", "electrician", "ac_fridge", "carpenter", "mazdoor"]);
+const urgencyEnum = z.enum(["now", "today", "tomorrow", "flexible"]);
+
+// Spec §8.1: input carries the intake result; flat fields stay accepted for
+// older callers (tick/rebook still post the same shape).
 const createSchema = z.object({
   technicianId: z.string().min(1).optional(),
   quick: z.boolean().optional(),
-  trade: z.enum(["plumber", "electrician", "ac_fridge", "carpenter", "mazdoor"]),
-  jobType: z.string().min(1),
+  intake: z.object({
+    trade: tradeEnum,
+    jobType: z.string().min(1),
+    problemRaw: z.string().optional(),
+    summary_en: z.string().optional(),
+    summary_ur: z.string().optional(),
+    urgency: urgencyEnum.optional(),
+  }).passthrough().optional(),
+  trade: tradeEnum.optional(),
+  jobType: z.string().optional(),
   problemRaw: z.string().optional(),
   summary_en: z.string().optional(),
   summary_ur: z.string().optional(),
-  urgency: z.enum(["now", "today", "tomorrow", "flexible"]).optional(),
+  urgency: urgencyEnum.optional(),
   location: z.object({
-    lat: z.number(),
-    lng: z.number(),
+    lat: z.number().optional(),
+    lng: z.number().optional(),
     areaId: z.string().optional(),
     note: z.string().optional(),
   }),
+  note: z.string().max(500).optional(),
   priceBand: z.object({ min: z.number(), max: z.number() }).nullable().optional(),
   candidates: z.array(z.string()).max(5).optional(),
   photoUrls: z.array(z.string()).optional(),
@@ -104,9 +118,22 @@ export async function POST(request: Request) {
     const parsed = createSchema.safeParse(await request.json().catch(() => null));
     if (!parsed.success) return fail("invalid_input", "Invalid booking input", 400);
     const input = parsed.data;
+    const trade = input.intake?.trade ?? input.trade;
+    const jobType = input.intake?.jobType ?? input.jobType;
+    if (!trade || !jobType) return fail("invalid_input", "trade and jobType are required", 400);
+    if (typeof input.location.lat !== "number" || typeof input.location.lng !== "number") {
+      return fail("invalid_input", "Location coordinates are required", 400);
+    }
     const candidates = input.candidates ?? (input.technicianId ? [input.technicianId] : []);
     if (!input.technicianId && !input.quick) return fail("invalid_input", "technicianId or quick is required", 400);
     if (!candidates.length) return fail("invalid_input", "At least one candidate is required", 400);
+
+    const location: BookingDoc["location"] = {
+      lat: input.location.lat!, // validated above
+      lng: input.location.lng!,
+      ...(input.location.areaId ? { areaId: input.location.areaId } : {}),
+      ...(input.note ?? input.location.note ? { note: input.note ?? input.location.note } : {}),
+    };
 
     const now = Date.now();
     const ref = db.collection("bookings").doc();
@@ -114,13 +141,13 @@ export async function POST(request: Request) {
       id: ref.id,
       clientId: uid,
       technicianId: input.technicianId ?? candidates[0],
-      trade: input.trade,
-      jobType: input.jobType,
-      problemRaw: input.problemRaw ?? "",
-      summary_en: input.summary_en ?? "",
-      summary_ur: input.summary_ur ?? "",
-      urgency: input.urgency ?? "today",
-      location: input.location,
+      trade,
+      jobType,
+      problemRaw: input.intake?.problemRaw ?? input.problemRaw ?? "",
+      summary_en: input.intake?.summary_en ?? input.summary_en ?? "",
+      summary_ur: input.intake?.summary_ur ?? input.summary_ur ?? "",
+      urgency: input.intake?.urgency ?? input.urgency ?? "today",
+      location,
       priceBand: input.priceBand ?? null,
       status: "requested",
       statusHistory: [{ status: "requested", at: now, actor }],

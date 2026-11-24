@@ -1,6 +1,7 @@
 // DWAS C07 — technician profile. Data is read server-side from Firestore;
 // hidden reviews are excluded at query time and never rendered.
 import Link from "next/link";
+import BookNowButton from "@/components/BookNowButton";
 import { LangDir, LocalizedText, T } from "@/components/TechCard";
 import { AREAS } from "@/lib/areas";
 import { db } from "@/lib/firebase/admin";
@@ -68,6 +69,8 @@ export default async function TechnicianPage({ params }: { params: Promise<{ id:
           </p>
         </div>
       </div>
+
+      <BookNowButton technicianId={id} />
 
       {badges.length > 0 && (
         <section className="flex flex-col gap-2 rounded-md border border-hairline bg-background p-4">

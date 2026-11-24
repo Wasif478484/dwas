@@ -221,5 +221,16 @@
   "tech.profile.notificationsOn": "[TODO-REVIEW] Notifications on",
   "tech.profile.approvalPending": "[TODO-REVIEW] Approval pending",
   "tech.profile.approvalRejected": "[TODO-REVIEW] Approval rejected",
-  "tech.profile.approvalSuspended": "[TODO-REVIEW] Suspended"
+  "tech.profile.approvalSuspended": "[TODO-REVIEW] Suspended",
+  "booking.bookNow": "[TODO-REVIEW] Book now",
+  "booking.rebookTitle": "[TODO-REVIEW] Rebook this job",
+  "booking.confirm": "[TODO-REVIEW] Confirm booking",
+  "booking.failed": "[TODO-REVIEW] Could not confirm booking. Please try again.",
+  "booking.empty.title": "[TODO-REVIEW] Start with your problem",
+  "booking.empty.body": "[TODO-REVIEW] Describe what needs fixing, then choose a technician to book.",
+  "booking.empty.back": "[TODO-REVIEW] Describe your problem",
+  "booking.slot.label": "[TODO-REVIEW] When should we come?",
+  "booking.slot.today": "[TODO-REVIEW] Today",
+  "booking.slot.tomorrow": "[TODO-REVIEW] Tomorrow",
+  "booking.slot.flexible": "[TODO-REVIEW] Flexible"
 }
