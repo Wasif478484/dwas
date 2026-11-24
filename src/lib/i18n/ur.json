@@ -264,5 +264,16 @@
   "booking.cancelReason.busy": "[TODO-REVIEW] I'm busy",
   "booking.cancelReason.too_far": "[TODO-REVIEW] Too far away",
   "booking.cancelReason.not_needed": "[TODO-REVIEW] No longer needed",
-  "booking.cancelReason.reschedule": "[TODO-REVIEW] I want to reschedule"
+  "booking.cancelReason.reschedule": "[TODO-REVIEW] I want to reschedule",
+  "admin.stats.loading": "[TODO-REVIEW] Loading dashboard…",
+  "admin.stats.retry": "[TODO-REVIEW] Retry",
+  "admin.stats.empty": "[TODO-REVIEW] No bookings yet for this period.",
+  "admin.stats.period": "[TODO-REVIEW] Period",
+  "admin.stats.noRating": "[TODO-REVIEW] No ratings yet",
+  "admin.stats.dailyTitle": "[TODO-REVIEW] Bookings per day",
+  "admin.stats.tradesTitle": "[TODO-REVIEW] Bookings by trade",
+  "admin.stats.demandTitle": "[TODO-REVIEW] Demand by area",
+  "admin.metric.acceptance": "[TODO-REVIEW] Acceptance rate",
+  "admin.metric.avgRating": "[TODO-REVIEW] Average rating",
+  "admin.metric.fallback": "[TODO-REVIEW] Fallback usage"
 }

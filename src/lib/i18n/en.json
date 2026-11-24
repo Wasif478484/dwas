@@ -264,5 +264,16 @@
   "booking.cancelReason.busy": "I'm busy",
   "booking.cancelReason.too_far": "Too far away",
   "booking.cancelReason.not_needed": "No longer needed",
-  "booking.cancelReason.reschedule": "I want to reschedule"
+  "booking.cancelReason.reschedule": "I want to reschedule",
+  "admin.stats.loading": "Loading dashboard…",
+  "admin.stats.retry": "Retry",
+  "admin.stats.empty": "No bookings yet for this period.",
+  "admin.stats.period": "Period",
+  "admin.stats.noRating": "No ratings yet",
+  "admin.stats.dailyTitle": "Bookings per day",
+  "admin.stats.tradesTitle": "Bookings by trade",
+  "admin.stats.demandTitle": "Demand by area",
+  "admin.metric.acceptance": "Acceptance rate",
+  "admin.metric.avgRating": "Average rating",
+  "admin.metric.fallback": "Fallback usage"
 }
