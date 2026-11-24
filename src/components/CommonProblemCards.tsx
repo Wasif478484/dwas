@@ -44,10 +44,10 @@ export default function CommonProblemCards({ onSelect }: { onSelect: (text: stri
             key={key}
             type="button"
             onClick={() => onSelect(t(lang, `problem.${key}`))}
-            className="flex flex-col items-center gap-1 rounded-lg border bg-white px-3 py-4 text-xs text-center shadow-sm active:bg-slate-50"
+            className="flex flex-col items-center gap-1 rounded-md border border-hairline bg-background px-3 py-4 text-xs text-ink active:bg-surface"
           >
-            <Icon className="h-6 w-6 text-teal-600" />
-            <span>{t(lang, `problem.${key}`)}</span>
+            <Icon className="h-6 w-6 text-primary" />
+            <span className="text-center">{t(lang, `problem.${key}`)}</span>
           </button>
         );
       })}

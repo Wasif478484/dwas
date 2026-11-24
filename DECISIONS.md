@@ -23,6 +23,14 @@ Recorded where the spec was silent or open, per the project rule "spec wins; whe
 - With `FIRESTORE_EMULATOR_HOST` set, `src/lib/firebase/admin.ts` connects the Admin SDK to the emulator.
 - Emulator for rules tests (§10.1): `firebase emulators:start --only firestore,auth` — the rules file is written per the §10.1 table; rules emulator tests were deferred to later milestones (D07).
 
+## Design — Linear reference (awesome-design-md)
+
+- Reference: Linear. Read from `C:\Users\Precision\.config\opencode\skills\awesome-design-md\design-md\linear.app\DESIGN.md`: near-black canvas, light gray ink, lavender-blue accent, pill radius, hairline borders, no decorative accent.
+- Adaptation: DWAS ships a light theme (white canvas + teal) — spec 9.2 pins "Teal as the main colour" and the foundation used white; Linear is near-black. Linear's fonts (SF Pro Display/Linear custom) are NOT shipped — we keep Geist (next/font).
+- Tokens added to `src/app/globals.css` (Linear-inspired, scaled down): `--color-primary: #107a8b` (verified 5.03:1 on white via `antislop-human/contrast-check.py` — spec 9.2 teal kept), ink neutrals, hairline, radius scale, text scale.
+- Accessibility checks run with `antislop-human`: `contrast-check.py` passes on primary/ink/surface.
+- Mobile: everything is flow-based (`flex-col`, `gap`), 362px first; no overflow-hidden on content, `min-h-screen` removed? — pages use `min-h-screen flex flex-col`.
+
 ## Notes and open items
 
 - Verified against the Firestore emulator: started with `npx firebase-tools@14 emulators:start --only firestore --project dwas` (requires Java 8+; installed Corretto 17 via winget here). `npm run seed` with `FIRESTORE_EMULATOR_HOST=127.0.0.1:8080` produced: users 5 (4 demo clients + 1 admin; Rafiq shares a user doc with Tech[0]), technicians 24, bookings 60, reviews 21 (completed bookings only, per A07/12.1), areas 7, rateTable 21.

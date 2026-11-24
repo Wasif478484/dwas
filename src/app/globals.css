@@ -1,26 +1,46 @@
 @import "tailwindcss";
 
+/* Linear-inspired design tokens (DESIGN.md in the awesome-design-md catalog).
+   DWAS keeps its spec colours: teal is the main colour (spec 9.2), so we ship a
+   light theme rather than Linear's near-black — recorded in DECISIONS.md. */
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #101418;
+  --color-primary: #107a8b;
+  --color-primary-hover: #0d6f7d;
+  --color-primary-focus: #107a8b;
+  --color-ink: #101418;
+  --color-ink-muted: #4b5563;
+  --color-ink-subtle: #6b7280;
+  --color-hairline: #e5e7eb;
+  --color-surface: #f8fafc;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-pill: 9999px;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-primary: var(--color-primary);
+  --color-primary-hover: var(--color-primary-hover);
+  --color-primary-focus: var(--color-primary-focus);
+  --color-ink: var(--color-ink);
+  --color-ink-muted: var(--color-ink-muted);
+  --color-ink-subtle: var(--color-ink-subtle);
+  --color-hairline: var(--color-hairline);
+  --color-surface: var(--color-surface);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --text-display: 1.75rem;
+  --text-title: 1.375rem;
+  --text-base: 1rem;
+  --font-weight-display: 600;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
 }
