@@ -232,5 +232,10 @@
   "booking.slot.label": "[TODO-REVIEW] When should we come?",
   "booking.slot.today": "[TODO-REVIEW] Today",
   "booking.slot.tomorrow": "[TODO-REVIEW] Tomorrow",
-  "booking.slot.flexible": "[TODO-REVIEW] Flexible"
+  "booking.slot.flexible": "[TODO-REVIEW] Flexible",
+  "badge.five_jobs": "[TODO-REVIEW] 5+ jobs completed",
+  "badge.top_rated": "[TODO-REVIEW] Top rated",
+  "badge.fast_replies": "[TODO-REVIEW] Fast replies",
+  "badge.newcomer": "[TODO-REVIEW] New on DWAS",
+  "badge.id_checked_demo": "[TODO-REVIEW] ID checked (demo)"
 }

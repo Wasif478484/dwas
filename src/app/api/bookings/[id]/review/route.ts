@@ -3,7 +3,8 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { db } from "@/lib/firebase/admin";
 import { transition } from "@/lib/booking/machine";
-import type { BookingDoc, ReviewDoc } from "@/lib/types";
+import type { BookingDoc, ReviewDoc, TechnicianDoc } from "@/lib/types";
+import { deriveTechnicianTrust, nonDerivedBadges, ratingsFromReviews, type ReviewLike } from "@/lib/trust/score";
 import { ApiError, getActor, handleError, logEvent, readBooking } from "../../route";
 
 const schema = z.object({
@@ -11,6 +12,8 @@ const schema = z.object({
   tags: z.array(z.string()).max(5).optional(),
   comment: z.string().optional(),
 });
+
+const REVIEW_WINDOW_MS = 14 * 24 * 60 * 60 * 1000;
 
 export async function POST(request: Request, context: { params: Promise<{ id: string }> }) {
   try {
@@ -53,23 +56,30 @@ export async function POST(request: Request, context: { params: Promise<{ id: st
       const current = freshSnap.data() as BookingDoc;
       if (current.status === "reviewed") throw new ApiError("already_reviewed", 409, "Booking already reviewed");
       if (current.status !== "completed") throw new ApiError("invalid_state", 409, "Booking is not completed");
-      const reviewsSnap = await tx.get(db.collection("reviews").where("technicianId", "==", booking.technicianId));
+      const completedAt = [...(current.statusHistory ?? [])].reverse().find((h) => h.status === "completed")?.at ?? current.createdAt;
+      if (now - completedAt > REVIEW_WINDOW_MS) throw new ApiError("review_window_closed", 409, "Review window has closed");
+      // Hidden reviews never reach the aggregates (§7.3).
+      const reviewsSnap = await tx.get(db.collection("reviews")
+        .where("technicianId", "==", booking.technicianId)
+        .where("hidden", "==", false));
       const techSnap = await tx.get(techRef);
       reviewed = transition(current, "reviewed", "client", { now, stars });
 
-      const all = [...reviewsSnap.docs.map((d) => d.data() as ReviewDoc), review];
-      const techData = techSnap.data() ?? {};
+      const ratings = ratingsFromReviews([...reviewsSnap.docs.map((d) => d.data() as ReviewLike), review]);
+      const techData = (techSnap.data() ?? {}) as Partial<TechnicianDoc>;
+      const stats = (techData.stats ?? {}) as Partial<TechnicianDoc["stats"]>;
+      const derived = deriveTechnicianTrust({
+        jobsCompleted,
+        ...ratings,
+        avgResponseSec: stats.avgResponseSec ?? null,
+        noShowCount: stats.noShowCount ?? 0,
+        approvalStatus: techData.approvalStatus,
+        manualBadges: nonDerivedBadges(Array.isArray(techData.badges) ? techData.badges : []),
+      });
+
       tx.set(reviewRef, review);
       tx.set(ref, reviewed);
-      tx.set(techRef, {
-        ...techData,
-        stats: {
-          ...(techData.stats ?? {}),
-          jobsCompleted,
-          ratingSum: all.reduce((sum, r) => sum + r.stars, 0),
-          ratingCount: all.length,
-        },
-      }, { merge: true });
+      tx.set(techRef, { ...techData, ...derived }, { merge: true });
     });
 
     if (!reviewed) throw new ApiError("invalid_state", 409, "Booking is not completed");

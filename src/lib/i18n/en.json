@@ -232,5 +232,10 @@
   "booking.slot.label": "When should we come?",
   "booking.slot.today": "Today",
   "booking.slot.tomorrow": "Tomorrow",
-  "booking.slot.flexible": "Flexible"
+  "booking.slot.flexible": "Flexible",
+  "badge.five_jobs": "5+ jobs completed",
+  "badge.top_rated": "Top rated",
+  "badge.fast_replies": "Fast replies",
+  "badge.newcomer": "New on DWAS",
+  "badge.id_checked_demo": "ID checked (demo)"
 }

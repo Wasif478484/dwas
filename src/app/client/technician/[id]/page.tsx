@@ -2,7 +2,7 @@
 // hidden reviews are excluded at query time and never rendered.
 import Link from "next/link";
 import BookNowButton from "@/components/BookNowButton";
-import { LangDir, LocalizedText, T } from "@/components/TechCard";
+import { BadgeLabel, LangDir, LocalizedText, T } from "@/components/TechCard";
 import { AREAS } from "@/lib/areas";
 import { db } from "@/lib/firebase/admin";
 import type { ReviewDoc } from "@/lib/types";
@@ -78,7 +78,7 @@ export default async function TechnicianPage({ params }: { params: Promise<{ id:
           <div className="flex flex-wrap gap-2">
             {badges.map((badge) => (
               <span key={badge} className="rounded-pill bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
-                {badge === "admin_approved" ? <T k="badge.admin_approved" /> : badge}
+                <BadgeLabel badge={badge} />
               </span>
             ))}
           </div>

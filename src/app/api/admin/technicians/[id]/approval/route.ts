@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { adminErrorResponse, requireAdmin } from "@/lib/auth/admin";
 import { db } from "@/lib/firebase/admin";
+import { recomputeTechnicianTrust } from "@/lib/trust/score";
 import type { Approval } from "@/lib/types";
 
 const inputSchema = z.object({
@@ -33,10 +34,8 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
 
     const status = STATUS[parsed.data.action];
     const batch = db.batch();
-    batch.update(techRef, {
-      approvalStatus: status,
-      badges: status === "approved" ? ["admin_approved"] : [],
-    });
+    // Badges are rebuilt by the shared helper so manual badges survive.
+    batch.update(techRef, { approvalStatus: status });
     batch.set(db.collection("audit").doc(), {
       actor: admin.uid,
       action: `technician_${parsed.data.action}`,
@@ -45,6 +44,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
       ts: Timestamp.now(),
     });
     await batch.commit();
+    await recomputeTechnicianTrust(db, id);
     return NextResponse.json({ id, approvalStatus: status });
   } catch (error) {
     const response = adminErrorResponse(error);

@@ -16,6 +16,22 @@ const REASON_KEYS: Record<string, TranslationKey> = {
   newcomer: "reasons.newcomer",
 };
 
+const BADGE_KEYS: Record<string, TranslationKey> = {
+  admin_approved: "badge.admin_approved",
+  five_jobs: "badge.five_jobs" as TranslationKey,
+  top_rated: "badge.top_rated" as TranslationKey,
+  fast_replies: "badge.fast_replies" as TranslationKey,
+  newcomer: "badge.newcomer" as TranslationKey,
+  id_checked_demo: "badge.id_checked_demo" as TranslationKey,
+};
+
+export function BadgeLabel({ badge }: { badge: string }) {
+  const lang = useLang();
+  const key = BADGE_KEYS[badge];
+  // Unknown keys (or keys not added to the dictionaries yet) show the raw badge.
+  return <>{key ? t(lang, key) ?? badge : badge}</>;
+}
+
 export function T({ k }: { k: TranslationKey }) {
   const lang = useLang();
   return <>{t(lang, k)}</>;
@@ -40,7 +56,7 @@ function replyText(lang: Lang, sec: number | null): string {
   return `${Math.max(1, Math.round(sec / 60))} ${t(lang, "unit.min")}`;
 }
 
-export default function TechCard({ result }: { result: MatchCard }) {
+export default function TechCard({ result }: { result: MatchCard & { badges?: string[] } }) {
   const lang = useLang();
   return (
     <Link
@@ -73,6 +89,15 @@ export default function TechCard({ result }: { result: MatchCard }) {
               </span>
             ))}
           </div>
+          {result.badges && result.badges.length > 0 && (
+            <div className="mt-1 flex flex-wrap gap-1">
+              {result.badges.map((badge) => (
+                <span key={badge} className="rounded-pill bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
+                  <BadgeLabel badge={badge} />
+                </span>
+              ))}
+            </div>
+          )}
           <p className="mt-2 text-sm text-ink" aria-label={t(lang, "tech.rating")}>
             ★ {result.ratingAvg ?? "—"} · {result.jobsCompleted} {t(lang, "card.jobs")}
           </p>

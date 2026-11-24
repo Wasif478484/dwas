@@ -5,6 +5,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { adminErrorResponse, requireAdmin } from "@/lib/auth/admin";
 import { db } from "@/lib/firebase/admin";
+import { recomputeTechnicianTrust } from "@/lib/trust/score";
 
 const inputSchema = z.object({ hidden: z.boolean() });
 
@@ -27,24 +28,6 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
     const batch = db.batch();
     batch.update(reviewRef, { hidden });
 
-    if (typeof technicianId === "string") {
-      const all = await db.collection("reviews").where("technicianId", "==", technicianId).get();
-      let ratingSum = 0;
-      let ratingCount = 0;
-      all.forEach((doc) => {
-        const isHidden = doc.id === id ? hidden : doc.get("hidden") === true;
-        const stars = doc.get("stars");
-        if (!isHidden && typeof stars === "number") {
-          ratingSum += stars;
-          ratingCount += 1;
-        }
-      });
-      batch.update(db.collection("technicians").doc(technicianId), {
-        "stats.ratingSum": ratingSum,
-        "stats.ratingCount": ratingCount,
-      });
-    }
-
     batch.set(db.collection("audit").doc(), {
       actor: admin.uid,
       action: hidden ? "review_hide" : "review_unhide",
@@ -53,6 +36,9 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
       ts: Timestamp.now(),
     });
     await batch.commit();
+    // The helper re-reads the review's new hidden state and rebuilds aggregates,
+    // badges and trustScore without touching manual badges.
+    if (typeof technicianId === "string") await recomputeTechnicianTrust(db, technicianId);
     return NextResponse.json({ id, hidden });
   } catch (error) {
     const response = adminErrorResponse(error);
