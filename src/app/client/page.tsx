@@ -73,7 +73,7 @@ export default function ClientHome() {
                 key={trade}
                 type="button"
                 onClick={() => addTrade(trade)}
-                className="rounded-pill border border-hairline bg-surface px-3 py-1.5 text-xs font-medium text-ink-muted active:bg-hairline"
+                className="pressable min-h-11 rounded-pill border border-hairline bg-surface px-4 text-sm font-medium text-ink-muted active:bg-hairline"
               >
                 {t(lang, `trade.${trade}`)}
               </button>
@@ -83,7 +83,7 @@ export default function ClientHome() {
             type="button"
             onClick={() => void onSubmit()}
             disabled={!text.trim()}
-            className="rounded-lg bg-primary px-8 py-2.5 text-base font-medium text-white disabled:opacity-60"
+            className="pressable min-h-11 rounded-lg border border-primary bg-background px-8 text-base font-medium text-primary disabled:opacity-60"
           >
             {t(lang, "client.submit")}
           </button>
@@ -92,18 +92,18 @@ export default function ClientHome() {
       )}
 
       {step === "emergency" && (
-        <section className="flex w-full max-w-lg flex-col gap-4 rounded-lg border-2 border-red-600 bg-background p-6" role="alert">
-          <h2 className="text-title font-display text-red-700">{t(lang, "emergency.title")}</h2>
+        <section className="flex w-full max-w-lg flex-col gap-4 rounded-lg border-2 border-danger bg-background p-6" role="alert">
+          <h2 className="text-title font-display text-danger">{t(lang, "emergency.title")}</h2>
           <p className="text-ink">{t(lang, "emergency.notice")}</p>
           <p className="text-ink-muted text-sm">{t(lang, "emergency.safety")}</p>
           <div className="flex flex-wrap gap-2">
-            <a href="tel:1122" className="rounded-lg bg-red-700 px-6 py-3 text-base font-medium text-white">
+            <a href="tel:1122" className="pressable rounded-lg bg-danger px-6 py-3 text-base font-medium text-white">
               {t(lang, "emergency.call")}
             </a>
             <button
               type="button"
               onClick={() => setStep("confirm")}
-              className="rounded-lg border border-hairline px-6 py-3 text-base font-medium text-ink"
+              className="pressable rounded-lg border border-hairline px-6 py-3 text-base font-medium text-ink"
             >
               {t(lang, "emergency.continue")}
             </button>

@@ -82,7 +82,7 @@ export default function TechHomeTiles() {
           aria-checked={online}
           disabled={busy || !tech}
           onClick={toggleOnline}
-          className={`flex min-h-[72px] min-w-[132px] flex-col items-center justify-center gap-1 rounded-pill px-6 font-semibold transition-colors disabled:opacity-60 ${
+          className={`pressable flex min-h-[72px] min-w-[132px] flex-col items-center justify-center gap-1 rounded-pill px-6 font-semibold disabled:opacity-60 ${
             online ? "bg-primary text-white" : "border border-hairline bg-background text-ink"
           }`}
         >
@@ -97,7 +97,7 @@ export default function TechHomeTiles() {
           <Link
             key={key}
             href={href}
-            className="flex min-h-[96px] items-center gap-4 rounded-md border border-hairline bg-background px-5 py-4 shadow-sm active:bg-surface"
+            className="pressable flex min-h-[96px] items-center gap-4 rounded-md border border-hairline bg-background px-5 py-4 active:bg-surface"
           >
             <Icon className="h-10 w-10 shrink-0 text-primary" />
             <span className="flex flex-col items-start leading-tight">

@@ -45,7 +45,7 @@ export default function TechCard({ result }: { result: MatchCard }) {
   return (
     <Link
       href={`/client/technician/${result.technicianId}`}
-      className="block rounded-md border border-hairline bg-background p-4 transition-colors hover:border-primary focus-visible:outline-2 focus-visible:outline-primary"
+      className="pressable block rounded-md border border-hairline bg-background p-4 hover:border-primary"
     >
       <div className="flex gap-3">
         {result.photoUrl ? (

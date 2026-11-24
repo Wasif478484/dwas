@@ -11,13 +11,13 @@ export default function Landing() {
       <div className="flex flex-col gap-4 text-center">
         <Link
           href="/client"
-          className="rounded-lg bg-teal-600 px-8 py-4 text-lg font-medium text-white shadow transition-colors hover:bg-teal-700"
+          className="pressable rounded-lg bg-primary px-8 py-4 text-lg font-medium text-white hover:bg-primary-hover"
         >
           {t("en", "landing.client")}
         </Link>
         <Link
           href="/tech"
-          className="rounded-lg bg-white px-8 py-4 text-lg font-medium text-teal-900 shadow transition-colors hover:bg-slate-50"
+          className="pressable rounded-lg border border-hairline bg-background px-8 py-4 text-lg font-medium text-ink hover:bg-surface"
         >
           {t("en", "landing.tech")}
         </Link>

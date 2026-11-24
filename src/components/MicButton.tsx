@@ -73,7 +73,7 @@ export default function MicButton({ lang, onTranscript }: { lang: Lang; onTransc
       type="button"
       onClick={busy ? stop : start}
       aria-label={t(lang, "client.mic")}
-      className="flex items-center justify-center gap-2 rounded-pill bg-primary px-10 py-8 text-lg font-medium text-white transition-colors hover:bg-primary-hover"
+      className="pressable flex items-center justify-center gap-2 rounded-pill bg-primary px-10 py-8 text-lg font-medium text-white hover:bg-primary-hover"
     >
       {busy ? <Square className="h-6 w-6" /> : <Mic className="h-6 w-6" />}
       {t(lang, "client.mic")}

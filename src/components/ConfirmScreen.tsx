@@ -40,7 +40,7 @@ export default function ConfirmScreen({
               setUrgency(u);
               onUrgencyChange(u);
             }}
-            className={`rounded-pill border px-3 py-1.5 text-xs ${
+            className={`pressable min-h-11 rounded-pill border px-4 text-sm ${
               urgency === u ? "border-primary bg-primary text-white" : "border-hairline text-ink-muted"
             }`}
           >
@@ -53,11 +53,11 @@ export default function ConfirmScreen({
           type="button"
           onClick={onConfirm}
           disabled={result.trade === "unknown"}
-          className="rounded-lg bg-primary px-6 py-2 text-sm font-medium text-white disabled:opacity-60"
+          className="pressable min-h-11 rounded-lg bg-primary px-6 text-sm font-medium text-white disabled:opacity-60"
         >
           {t(lang, "client.haan")}
         </button>
-        <button type="button" onClick={onPickTrade} className="rounded-lg border border-hairline px-6 py-2 text-sm font-medium">
+        <button type="button" onClick={onPickTrade} className="pressable min-h-11 rounded-lg border border-hairline px-6 text-sm font-medium">
           {t(lang, "client.nahi")}
         </button>
       </div>

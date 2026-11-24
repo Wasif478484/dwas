@@ -1,23 +1,36 @@
 @import "tailwindcss";
 
-/* Linear-inspired design tokens (DESIGN.md in the awesome-design-md catalog).
-   DWAS keeps its spec colours: teal is the main colour (spec 9.2), so we ship a
-   light theme rather than Linear's near-black — recorded in DECISIONS.md. */
+/* DWAS visual system: Minimalism & Swiss Style (ui-ux-pro-max design-system
+   search), flat/RTL-full style, spec §9.2 colours. Light theme with teal as the
+   one main colour; amber = waiting, green = accept, red = emergency. Tokens
+   live here — components never hardcode a hex value. */
 :root {
   --background: #ffffff;
   --foreground: #101418;
   --color-primary: #107a8b;
   --color-primary-hover: #0d6f7d;
   --color-primary-focus: #107a8b;
+  --color-waiting: #b45309;
+  --color-success: #15803d;
+  --color-danger: #b91c1c;
   --color-ink: #101418;
   --color-ink-muted: #4b5563;
   --color-ink-subtle: #6b7280;
   --color-hairline: #e5e7eb;
   --color-surface: #f8fafc;
+  --color-ring: #107a8b;
   --radius-sm: 6px;
   --radius-md: 10px;
   --radius-lg: 14px;
   --radius-pill: 9999px;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --motion-fast: 150ms;
+  --ease-out: cubic-bezier(0.2, 0, 0, 1);
 }
 
 @theme inline {
@@ -26,6 +39,9 @@
   --color-primary: var(--color-primary);
   --color-primary-hover: var(--color-primary-hover);
   --color-primary-focus: var(--color-primary-focus);
+  --color-waiting: var(--color-waiting);
+  --color-success: var(--color-success);
+  --color-danger: var(--color-danger);
   --color-ink: var(--color-ink);
   --color-ink-muted: var(--color-ink-muted);
   --color-ink-subtle: var(--color-ink-subtle);
@@ -39,8 +55,54 @@
   --font-weight-display: 600;
 }
 
+html {
+  touch-action: manipulation;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+/* Every interactive element: a pointer affordance and a visible focus ring.
+   Outline survives keyboard use in both writing directions. */
+button:not(:disabled),
+a[href] {
+  cursor: pointer;
+}
+button:disabled {
+  cursor: not-allowed;
+}
+:focus-visible {
+  outline: 2px solid var(--color-ring);
+  outline-offset: 2px;
+}
+
+/* One shared micro-interaction: lift on hover, press without layout shift.
+   Transform only — GPU-friendly and interruptible. */
+.pressable {
+  transition: transform var(--motion-fast) var(--ease-out), background-color var(--motion-fast) var(--ease-out);
+}
+.pressable:hover {
+  transform: translateY(-2px);
+}
+.pressable:active {
+  transform: translateY(0) scale(0.98);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .pressable:hover,
+  .pressable:active {
+    transform: none;
+  }
 }

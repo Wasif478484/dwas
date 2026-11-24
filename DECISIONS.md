@@ -36,6 +36,12 @@ Recorded where the spec was silent or open, per the project rule "spec wins; whe
 - Next.js 16.4.6 ignores `+page.tsx`; route pages must be named `page.tsx`. The old `app/(client)/+page.tsx` never created `/client` (and a `(client)` route group maps to `/`, colliding with the landing) — the landing's links 404'd. Routes now use `page.tsx` and the client home lives at `src/app/client/page.tsx` (spec §9.1).
 - GitHub rejected pushes with a private commit email (GH007); local git identity is now `Wasif478484@users.noreply.github.com` and the history was rewritten with `--reset-author` so pushes work.
 
+## Visual system (ui-ux-pro-max)
+
+- Design-system search (`"mobile service booking voice first marketplace" --design-system`) returned Minimalism & Swiss Style + a 3-step funnel pattern + accessible typography (Atkinson suggested; spec pins Inter/Geist for Latin, so kept). `--domain style --rtl=full` returned flat-design (`rtl_level: full`), so no directional rework was needed.
+- Applied as tokens in `src/app/globals.css`: teal primary (spec 9.2), amber waiting, green accept, red danger — all AA-verified with `antislop-human/contrast-check.py`; 4/8 spacing scale, one shared 150ms transform-only `pressable` micro-interaction, visible focus ring, reduced-motion support, cursor affordance. No gradients, glass, emoji, glow or decorative dots.
+- The client home's mic remains the single primary CTA; "Continue" is now a secondary outline button.
+
 ## Notes and open items
 
 - Verified against the Firestore emulator: started with `npx firebase-tools@14 emulators:start --only firestore --project dwas` (requires Java 8+; installed Corretto 17 via winget here). `npm run seed` with `FIRESTORE_EMULATOR_HOST=127.0.0.1:8080` produced: users 5 (4 demo clients + 1 admin; Rafiq shares a user doc with Tech[0]), technicians 24, bookings 60, reviews 21 (completed bookings only, per A07/12.1), areas 7, rateTable 21.
