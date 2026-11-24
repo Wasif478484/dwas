@@ -247,5 +247,11 @@
   "price.disputeFailed": "[TODO-REVIEW] Could not submit your dispute. Please try again.",
   "price.disputeStatusFailed": "[TODO-REVIEW] Your dispute was recorded, but the booking status could not be updated.",
   "price.disputeOpened": "[TODO-REVIEW] Dispute opened. We'll review the price.",
-  "booking.privacyNotice": "[TODO-REVIEW] Your exact address and phone number are shared only after the technician accepts."
+  "booking.privacyNotice": "[TODO-REVIEW] Your exact address and phone number are shared only after the technician accepts.",
+  "history.title": "[TODO-REVIEW] Your bookings",
+  "history.loading": "[TODO-REVIEW] Loading bookings…",
+  "history.error": "[TODO-REVIEW] Could not load your bookings. Please try again.",
+  "history.empty": "[TODO-REVIEW] No bookings yet.",
+  "history.back": "[TODO-REVIEW] Describe your problem",
+  "history.rebook": "[TODO-REVIEW] Book again"
 }

@@ -247,5 +247,11 @@
   "price.disputeFailed": "Could not submit your dispute. Please try again.",
   "price.disputeStatusFailed": "Your dispute was recorded, but the booking status could not be updated.",
   "price.disputeOpened": "Dispute opened. We'll review the price.",
-  "booking.privacyNotice": "Your exact address and phone number are shared only after the technician accepts."
+  "booking.privacyNotice": "Your exact address and phone number are shared only after the technician accepts.",
+  "history.title": "Your bookings",
+  "history.loading": "Loading bookings…",
+  "history.error": "Could not load your bookings. Please try again.",
+  "history.empty": "No bookings yet.",
+  "history.back": "Describe your problem",
+  "history.rebook": "Book again"
 }

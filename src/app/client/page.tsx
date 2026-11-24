@@ -3,6 +3,7 @@
 // urgency chip C04) → location (C05).
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import CommonProblemCards, { TRADES } from "@/components/CommonProblemCards";
@@ -58,7 +59,12 @@ export default function ClientHome() {
 
   return (
     <div className="flex min-h-screen flex-1 flex-col items-center gap-6 px-4 py-6" dir={lang === "ur" ? "rtl" : "ltr"}>
-      <h1 className="text-center text-display font-display">{t(lang, "client.title")}</h1>
+      <header className="flex w-full max-w-lg items-center justify-between gap-3">
+        <h1 className="text-display font-display">{t(lang, "client.title")}</h1>
+        <Link href="/client/history" className="pressable text-sm font-medium text-primary hover:underline">
+          {t(lang, "history.title")}
+        </Link>
+      </header>
 
       {step === "describe" && (
         <form className="flex w-full max-w-lg flex-col gap-4">
