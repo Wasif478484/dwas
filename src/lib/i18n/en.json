@@ -237,5 +237,14 @@
   "badge.top_rated": "Top rated",
   "badge.fast_replies": "Fast replies",
   "badge.newcomer": "New on DWAS",
-  "badge.id_checked_demo": "ID checked (demo)"
+  "badge.id_checked_demo": "ID checked (demo)",
+  "price.overBandTitle": "Price needs your confirmation",
+  "price.overBandBody": "The final price is above the expected range of",
+  "price.confirmPrice": "Confirm price",
+  "price.disputePrice": "Dispute price",
+  "price.disputeReason": "Final price is above the agreed band",
+  "price.confirmFailed": "Could not confirm the price. Please try again.",
+  "price.disputeFailed": "Could not submit your dispute. Please try again.",
+  "price.disputeStatusFailed": "Your dispute was recorded, but the booking status could not be updated.",
+  "price.disputeOpened": "Dispute opened. We'll review the price."
 }

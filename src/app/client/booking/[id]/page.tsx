@@ -4,6 +4,7 @@
 import { Suspense, useCallback, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import StatusTracker, { tr } from "@/components/StatusTracker";
+import PriceConfirmation from "@/components/PriceConfirmation";
 import { useLang } from "@/lib/i18n/use-lang";
 import type { BookingDoc } from "@/lib/types";
 
@@ -122,6 +123,8 @@ function BookingContent() {
           </section>
 
           <StatusTracker status={booking.status} lang={lang} />
+
+          <PriceConfirmation booking={booking} onChanged={load} />
 
           {booking.phoneRevealed && phone && (
             <section className="flex flex-col gap-2" aria-label={tr(lang, "booking.contactTitle")}>
